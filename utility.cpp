@@ -14,6 +14,9 @@ bool is_number(std::string_view s) {
     bool is_ok = true;
     if ((s[0] != '-' && !is_digit(s[0])) || s[0] == '0')
         is_ok = false;
+    if (s[0] == '-' && s.length()) {
+        is_ok = false;
+    }
     for (int i = 1; s[i] != '\0' && is_ok; i++) {
         if (!is_digit(s[i])) {
             is_ok = false;

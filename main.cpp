@@ -4,13 +4,12 @@
 #include "Lexeme.h"
 
 int main() {
-    std::list<Lexeme> lexemes =  read ("(3-(6*6-8*1-4)-9)+1");
-
-    for (Lexeme& lex : lexemes) {
-        std::cout << lex.buffer << " ";
-
+    std::string s  = "(3-(6*6-8*1-4)-9)+1";
+    std::list<Lexeme> lexemes = ToPostfix(read (s));
+    //std::list<Lexeme> lexemes = (read(s));
+    for (auto& lexeme : lexemes) {
+        std::cout << lexeme.buffer << " ";
     }
-
     return 0;
 }
 

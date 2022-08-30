@@ -47,6 +47,9 @@ std::list<Lexeme> split(std::string_view str) {
             lexem_ready = true;
         } else if(str[i] == '-') {
             buffer.push_back(str[i]);
+            if (str[i-1] == ')') {
+                lexem_ready = true;
+            }
         } else if (str[i] == 'x' && (str.empty()  || str[i-1] == '-')){
             buffer.push_back(str[i]);
             lexem_ready = true;
