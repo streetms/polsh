@@ -5,6 +5,7 @@
 #include <stack>
 #include "Lexeme.h"
 #include <iostream>
+#include <ciso646>
 bool bracket_check(std::string_view expression) {
     int counter = 0;
     bool is_ok = true;
@@ -51,7 +52,7 @@ std::list<Lexeme> split(std::string_view str) {
             lexem_ready = true;
         } else {
             buffer.push_back(str[i]);
-            if(is_digit(str[i+1]) or is_operator(str[i+1]) or is_bracket(str[i+1]) or str[i+1] == ' '){
+            if(is_digit(str[i+1]) || is_operator(str[i+1]) || is_bracket(str[i+1]) || str[i+1] == ' '){
                 lexem_ready = true;
             }
         }
@@ -102,6 +103,44 @@ std::list<Lexeme> read(std::string expression) {
         }
     }
     return list_lexems;
+}
+
+std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
+    std::list<Lexeme> str;
+    std::stack<Lexeme> stack;
+    for ( auto lex = lexeme.begin(); lex != lexeme.end(); lex++) {
+        //lex->buffer - symbol
+        if (lex->type == Lexeme::Type::number) {
+            str.push_back(*lex);
+        } else if (lex->buffer == "(") {
+            stack.push(*lex);
+        } else if (lex->buffer == ")") {
+            while ( stack.top().buffer != "(" ) {
+                str.push_back(stack.top());
+                stack.pop();
+            }
+            stack.pop();
+        } else {
+            if (stack.empty() || stack.top().type == Lexeme::Type::bracket) {
+                stack.push(*lex);
+            } else if (stack.top().priority < lex->priority) {
+                stack.push(*lex);
+            } else {
+                while (stack.top().type == Lexeme::Type::operator_ && stack.top().priority >= lex->priority) {
+                    str.push_back(stack.top());
+                    stack.pop();
+                } stack.push(*lex);
+            }
+
+        }
+    }
+
+    while (!stack.empty()){
+        str.push_back(stack.top());
+        stack.pop();
+    }
+
+    return str;
 }
 
 
