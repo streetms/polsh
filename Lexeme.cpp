@@ -58,3 +58,7 @@ Lexeme::Lexeme(double number) {
 Lexeme::Lexeme() {
     this->type = Type::undefined;
 }
+
+Lexeme::operator double() {
+    return atof(buffer.c_str());
+}

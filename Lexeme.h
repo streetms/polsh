@@ -15,6 +15,7 @@ public:
     std::string buffer;
     Lexeme (std::string_view word);
     Lexeme (double number);
+    operator double();
     Lexeme();
 };
 #endif  

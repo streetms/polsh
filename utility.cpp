@@ -1,5 +1,6 @@
 #include "utility.h"
 #include <string>
+#include <algorithm>
 #define AMOUNT_AVAILABLE_FUNCTION 6
 std::string_view available_functions[AMOUNT_AVAILABLE_FUNCTION] = {
         "sin", "cos", "tg", "sqrt", "ln", "pow"};
@@ -17,10 +18,14 @@ bool is_number(std::string_view s) {
     if (s[0] == '-' && s.length()) {
         is_ok = false;
     }
+
     for (int i = 1; s[i] != '\0' && is_ok; i++) {
-        if (!is_digit(s[i])) {
+        if (!is_digit(s[i]) && s[i] != '.') {
             is_ok = false;
         }
+    }
+    if (std::count(s.begin(),s.end(),'.') > 1) {
+        is_ok = false;
     }
     return is_ok;
 }

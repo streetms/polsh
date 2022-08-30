@@ -149,10 +149,8 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
  double Сalculator(std::list<Lexeme> str) {
     std::stack<Lexeme> stack;
     double res = 0;
-    int count = 0;
     for ( auto lex = str.begin(); lex != str.end(); lex++) {
-        //lex->buffer - symbol
-        if  (lex->type == Lexeme::Type::number || lex->type == Lexeme::Type::function) {
+        if  (lex->type == Lexeme::Type::number) {
             stack.push(*lex);
         } else {
             if (!stack.empty()) {
@@ -164,30 +162,31 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
                     switch (lex->buffer[0]) {
                         case '+':
                             res = atof(cur_s_1.buffer.c_str()) + atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (std::to_string(res)));
+                            stack.push(Lexeme (res));
                             break;
                         case '-':
                             res = atof(cur_s_1.buffer.c_str()) - atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (std::to_string(res)));
+                            stack.push(Lexeme (res));
                             break;
                         case '*':
                             res = atof(cur_s_1.buffer.c_str()) * atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (std::to_string(res)));
+                            stack.push(Lexeme (res));
                             break;
                         case '/':
                             res = atof(cur_s_1.buffer.c_str()) / atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (std::to_string(res)));
+                            stack.push(Lexeme (res));
                             break;
                         }
                     }
-                        double temp;
-                        if (lex->type == Lexeme::Type::function) {
-                            stack.push(lex->f(atof(cur_s_2.buffer.c_str())));
+                    if (lex->type == Lexeme::Type::function) {
+                        stack.push(lex->f(atof(cur_s_2.buffer.c_str())));
                     }
                 }
             }
         }
-
+    if (!stack.empty()) {
+        res = atof(stack.top().buffer.c_str());
+    }
     return res;
 }
 
