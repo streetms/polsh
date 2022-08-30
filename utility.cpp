@@ -2,7 +2,7 @@
 #include <string>
 #define AMOUNT_AVAILABLE_FUNCTION 7
 std::string_view available_functions[AMOUNT_AVAILABLE_FUNCTION] = {
-        "sin", "cos", "tg", "^", "ctg", "sqrt", "ln"};
+        "sin", "cos", "tg", "ctg", "sqrt", "ln"};
 
 bool is_digit(char ch) { return ch >= '0' && ch <= '9'; }
 
