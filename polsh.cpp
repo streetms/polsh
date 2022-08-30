@@ -118,7 +118,7 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
         } else if (lex->buffer == "(") {
             stack.push(*lex);
         } else if (lex->buffer == ")") {
-            while ( stack.top().buffer != "(" ) {
+            while (stack.top().buffer != "(") {
                 str.push_back(stack.top());
                 stack.pop();
             }
@@ -129,7 +129,7 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
             } else if (stack.top().priority < lex->priority) {
                 stack.push(*lex);
             } else {
-                while (stack.top().type == Lexeme::Type::operator_ && stack.top().priority >= lex->priority) {
+                while ( !stack.empty()  &&  (stack.top().type == Lexeme::Type::operator_ || stack.top().type == Lexeme::Type::function && stack.top().priority >= lex->priority)) {
                     str.push_back(stack.top());
                     stack.pop();
                 } stack.push(*lex);
@@ -145,77 +145,34 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
 
     return str;
 }
+ double Сalculator(std::list<Lexeme> str) {
+    std::list<Lexeme> out_str;
+    std::stack<Lexeme> stack;
+     double ot = 0;
+    for ( auto lex = str.begin(); lex != str.end(); lex++) {
+        //lex->buffer - symbol
+        if  (lex->type == Lexeme::Type::number || lex->type == Lexeme::Type::function) {
+            stack.push(*lex);
+        } else {
+            if (!stack.empty()) {
+                Lexeme cur_s_2 = stack.top();
+                stack.pop();
+                if (!stack.empty()) {
+                    Lexeme cur_s_1 = stack.top();
+                    stack.pop();
+                    switch (lex->buffer[0]) {
+                        case '+':
+                            ot = cur_s_1.buffer[0] + cur_s_2.buffer[0];
+                            std::cout << cur_s_1.buffer[0] << " " << cur_s_2.buffer[0] << "\n";
+                    }
+                }
+            }
 
+        }
+    }
 
-//list_node *ToPostfix(List head) {
-//    Lexem x;
-//    List postfix_str = NULL;
-//    stack_node *head_s = NULL;
-//    int i = -1;
-//
-//    if (head == NULL) {
-//        puts("sd");
-//    }
-//
-//    for (list_node *cur = head; cur != NULL; cur = cur->next) {
-//
-//
-//        printf("%s\n", cur->data.buffer);
-//        //  cur->data - LEXEM
-//        i++;
-//        Lexem c = cur->data; // символ
-//
-//        if (cur->data.type == number)  {
-//            add_back_list(&postfix_str, c);
-//
-//        } else if (c.buffer[0] == '(') {
-//
-//            head_s = push(head_s, cur->data);
-//
-//        } else if (c.buffer[0] == ')') {
-//
-//            while ( head_s != NULL  && ((x = pop(&head_s)).buffer[0] != '(')) {
-//                add_back_list(&postfix_str, x);
-//                // printf("%s\n", x.buffer);
-//            }
-//        } else {
-//            Lexem pred = cur->prev->data;
-//            if (i > 0) {
-//
-//                if (pred.type == bracket || head_s == NULL) {
-//                    head_s = push(head_s, cur->data);
-//
-//                } else {
-//                    Lexem pred_s = pop(&head_s);
-//                    head_s = push(head_s, pred_s);
-//                    //printf ("%s---%s\n",pred_s.buffer, c.buffer);
-//                    while (head_s != NULL && pred_s.priotity <= c.priotity && pred_s.type != bracket) {
-//                        printf ("%s---%s\n",pred_s.buffer, c.buffer);
-//                        pred_s = pop(&head_s);
-//
-//                        if (head_s != NULL) {
-//                            pred_s = pop(&head_s);
-//                            head_s = push(head_s, pred_s);
-//                        }
-//
-//                        // printf("x = %d", x.buffer[0]);
-//                        add_back_list(&postfix_str, pred_s);
-//                    }
-//                    head_s = push(head_s, cur->data);
-//                }
-//            }
-//        }
-//        if (cur->next == NULL) {
-//            while (head_s != NULL) {
-//                x = pop(&head_s);
-//                add_back_list(&postfix_str, x);
-//                // printf("ost ");
-//            }
-//        }
-//    }
-//    destroy_list(head);
-//    return postfix_str;
-//}
+    return ot;
+}
 
 // sin(x)
 // cos(x)

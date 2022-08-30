@@ -26,8 +26,6 @@ Lexeme::Lexeme(std::string_view word) {
             f = cos;
         } else if (word == "tg") {
             f = tan;
-        } else if (word == "ctg") {
-            f =  ;
         } else if (word == "sqrt") {
             f = sqrt;
         } else if (word == "ln") {
