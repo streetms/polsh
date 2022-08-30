@@ -1,8 +1,8 @@
 #include "utility.h"
 #include <string>
-#define AMOUNT_AVAILABLE_FUNCTION 5
+#define AMOUNT_AVAILABLE_FUNCTION 6
 std::string_view available_functions[AMOUNT_AVAILABLE_FUNCTION] = {
-        "sin", "cos", "tg", "sqrt", "ln"};
+        "sin", "cos", "tg", "sqrt", "ln", "pow"};
 
 bool is_digit(char ch) { return ch >= '0' && ch <= '9'; }
 
