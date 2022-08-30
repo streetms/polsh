@@ -147,7 +147,6 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
     return str;
 }
  double Сalculator(std::list<Lexeme> str) {
-    std::list<Lexeme> out_str;
     std::stack<Lexeme> stack;
     double res = 0;
     int count = 0;
@@ -159,7 +158,7 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
             if (!stack.empty()) {
                 Lexeme cur_s_2 = stack.top();
                 stack.pop();
-                if (!stack.empty()) {
+                if (!stack.empty() && lex->type == Lexeme::Type::operator_) {
                     Lexeme cur_s_1 = stack.top();
                     stack.pop();
                     switch (lex->buffer[0]) {
@@ -179,28 +178,15 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
                             res = atof(cur_s_1.buffer.c_str()) / atof(cur_s_2.buffer.c_str());
                             stack.push(Lexeme (std::to_string(res)));
                             break;
-                    }
-
-                    double temp;
-                    if (lex->type == Lexeme::Type::function) {
-                        if (count == 0) {
-                            Lexeme cur_s_f =stack.top();
-                            stack.pop();
-                            count++;
-                        }
-                       if (count == 1){
-                           temp = atof(cur_s_f.buffer.c_str());
-                           stack.push(Lexeme (std::to_string(lex->f(temp))));
-                           stack.pop();
-                           count = 0;
                         }
                     }
-
+                        double temp;
+                        if (lex->type == Lexeme::Type::function) {
+                            stack.push(lex->f(atof(cur_s_2.buffer.c_str())));
+                    }
                 }
             }
-
         }
-    }
 
     return res;
 }
