@@ -6,6 +6,7 @@
 #include "Lexeme.h"
 #include <iostream>
 #include <ciso646>
+#include "stdio.h"
 bool bracket_check(std::string_view expression) {
     int counter = 0;
     bool is_ok = true;
@@ -148,7 +149,7 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
  double Сalculator(std::list<Lexeme> str) {
     std::list<Lexeme> out_str;
     std::stack<Lexeme> stack;
-     double ot = 0;
+     double res = 0;
     for ( auto lex = str.begin(); lex != str.end(); lex++) {
         //lex->buffer - symbol
         if  (lex->type == Lexeme::Type::number || lex->type == Lexeme::Type::function) {
@@ -162,8 +163,21 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
                     stack.pop();
                     switch (lex->buffer[0]) {
                         case '+':
-                            ot = cur_s_1.buffer[0] + cur_s_2.buffer[0];
-                            std::cout << cur_s_1.buffer[0] << " " << cur_s_2.buffer[0] << "\n";
+                            res = atof(cur_s_1.buffer.c_str()) + atof(cur_s_2.buffer.c_str());
+                            stack.push(Lexeme (std::to_string(res)));
+                            break;
+                        case '-':
+                            res = atof(cur_s_1.buffer.c_str()) - atof(cur_s_2.buffer.c_str());
+                            stack.push(Lexeme (std::to_string(res)));
+                            break;
+                        case '*':
+                            res = atof(cur_s_1.buffer.c_str()) * atof(cur_s_2.buffer.c_str());
+                            stack.push(Lexeme (std::to_string(res)));
+                            break;
+                        case '/':
+                            res = atof(cur_s_1.buffer.c_str()) / atof(cur_s_2.buffer.c_str());
+                            stack.push(Lexeme (std::to_string(res)));
+                            break;
                     }
                 }
             }
@@ -171,7 +185,7 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
         }
     }
 
-    return ot;
+    return res;
 }
 
 // sin(x)
