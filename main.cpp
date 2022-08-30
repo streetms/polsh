@@ -30,8 +30,8 @@ void test() {
     }
 }
 
-
 int main() {
     test();
+    std::list<Lexeme> l;
     return 0;
 }

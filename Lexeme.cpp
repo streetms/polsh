@@ -54,3 +54,7 @@ Lexeme::Lexeme(double number) {
     this->buffer = std::to_string(number);
     type = Type::number;
 }
+
+Lexeme::Lexeme() {
+    this->type = Type::undefined;
+}
