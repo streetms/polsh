@@ -49,3 +49,8 @@ double Lexeme::f(double x) {
 double Lexeme::f(double x1, double x2) {
     return std::get<1>(func)(x1,x2);
 }
+
+Lexeme::Lexeme(double number) {
+    this->buffer = std::to_string(number);
+    type = Type::number;
+}

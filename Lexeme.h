@@ -14,5 +14,6 @@ public:
     int priority;
     std::string buffer;
     Lexeme (std::string_view word);
+    Lexeme (double number);
 };
 #endif  
