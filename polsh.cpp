@@ -149,7 +149,8 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
  double Сalculator(std::list<Lexeme> str) {
     std::list<Lexeme> out_str;
     std::stack<Lexeme> stack;
-     double res = 0;
+    double res = 0;
+    int count = 0;
     for ( auto lex = str.begin(); lex != str.end(); lex++) {
         //lex->buffer - symbol
         if  (lex->type == Lexeme::Type::number || lex->type == Lexeme::Type::function) {
@@ -179,6 +180,22 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
                             stack.push(Lexeme (std::to_string(res)));
                             break;
                     }
+
+                    double temp;
+                    if (lex->type == Lexeme::Type::function) {
+                        if (count == 0) {
+                            Lexeme cur_s_f =stack.top();
+                            stack.pop();
+                            count++;
+                        }
+                       if (count == 1){
+                           temp = atof(cur_s_f.buffer.c_str());
+                           stack.push(Lexeme (std::to_string(lex->f(temp))));
+                           stack.pop();
+                           count = 0;
+                        }
+                    }
+
                 }
             }
 

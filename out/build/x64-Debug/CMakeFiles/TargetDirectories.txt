@@ -1,0 +1,3 @@
+C:/Users/tina_/Polsha/polsh/out/build/x64-Debug/CMakeFiles/polsh.dir
+C:/Users/tina_/Polsha/polsh/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/tina_/Polsha/polsh/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,6 @@
+# ninja log v5
+14	455	6835525592614207	CMakeFiles/polsh.dir/utility.cpp.obj	9cba3ada3b4b1264
+1	459	6835525592674210	CMakeFiles/polsh.dir/lexeme.cpp.obj	38ad3d6ec274bdb
+8	466	6835525592742072	CMakeFiles/polsh.dir/main.cpp.obj	962a57d9c7c6e963
+0	605	6835528539442603	CMakeFiles/polsh.dir/polsh.cpp.obj	411e35eab5587ace
+606	966	6835528542930484	polsh.exe	df2bdcbe0bad3186

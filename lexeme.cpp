@@ -1,6 +1,8 @@
 #include "Lexeme.h"
 #include "utility.h"
 #include <cmath>
+
+
 Lexeme::Lexeme(std::string_view word) {
     buffer = word;
     if (is_number(word)) {
@@ -21,19 +23,29 @@ Lexeme::Lexeme(std::string_view word) {
         type = Lexeme::Type::function;
         priority = 3;
         if (word == "sin") {
-            f = sin;
+            func = sin;
         } else if (word == "cos") {
-            f = cos;
+            func = cos;
         } else if (word == "tg") {
-            f = tan;
+            func = tan;
         } else if (word == "sqrt") {
-            f = sqrt;
+            func = sqrt;
         } else if (word == "ln") {
-            f = log;
+            func = log;
+        } else if (word == "pow") {
+            func = pow;
         }
     } else if (is_variable(word)) {
         type = Lexeme::Type::variable;
     } else {
         type = Lexeme::Type::undefined;
     }
+}
+
+double Lexeme::f(double x) {
+    return   std::get<0>(func)(x);
+}
+
+double Lexeme::f(double x1, double x2) {
+    return std::get<1>(func)(x1,x2);
 }

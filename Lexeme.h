@@ -2,11 +2,13 @@
 #define LEXEM
 #include <string>
 #include <functional>
-
+#include <variant>
 class Lexeme
 {
+    std::variant<std::function<double(double)>, std::function<double(double,double)>> func;
 public:
-    std::function<double(double)> f;
+    double f(double x);
+    double f(double x1,double x2);
     enum class Type {function, number, bracket, operator_, variable, undefined};
     Type type;
     int priority;
