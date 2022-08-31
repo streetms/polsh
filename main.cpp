@@ -24,14 +24,11 @@ void test() {
     for (auto [in, out]: array) {
         double res = Сalculator(ToPostfix(read(in)));
 
-        std::cout << in << "=" << res << " - " << ((abs(res - out) < 10e-2  ) ? "ok" : "fail") << "\n";
+        std::cout << in << "=" << res << " - " << ((abs(res - out) < 10e-6  ) ? "ok" : "fail") << "\n";
     }
 }
 
 int main() {
-    Lexeme lex(124.12);
-    lex = 623;
-    double x = lex;
-    std::cout << x << std::endl;
+    test();
     return 0;
 }

@@ -4,9 +4,6 @@
 #include <list>
 #include <stack>
 #include "Lexeme.h"
-#include <iostream>
-#include <ciso646>
-#include "stdio.h"
 bool bracket_check(std::string_view expression) {
     int counter = 0;
     bool is_ok = true;
@@ -89,14 +86,16 @@ std::list<Lexeme> read(std::string expression) {
             }
             auto next = ++cur;
             cur--;
-            if (cur->type == Lexeme::Type::function && next->buffer  != "(")  {
+            if (cur->type == Lexeme::Type::function && next->to_string()  != "(")  {
                 is_ok = false;
             }
-            if (cur->buffer == "(" && next->buffer == ")") {
-                is_ok = false;
-            }
-            if (cur->buffer == "(" && next->type == Lexeme::Type::operator_ && next->buffer != "-"){
-                is_ok = false;
+            if (cur->type != Lexeme::Type::number && next->type != Lexeme::Type::number) {
+                if (cur->to_string() == "(" && next->to_string() == ")") {
+                    is_ok = false;
+                }
+                if (cur->to_string() == "(" && next->type == Lexeme::Type::operator_ && next->to_string() != "-") {
+                    is_ok = false;
+                }
             }
             if (cur->type == Lexeme::Type::operator_ && next->type == Lexeme::Type::operator_) {
                 is_ok = false;
@@ -112,28 +111,28 @@ std::list<Lexeme> read(std::string expression) {
 std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
     std::list<Lexeme> str;
     std::stack<Lexeme> stack;
-    for ( auto lex = lexeme.begin(); lex != lexeme.end(); lex++) {
+    for (auto lex : lexeme) {
         //lex->buffer - symbol
-        if (lex->type == Lexeme::Type::number) {
-            str.push_back(*lex);
-        } else if (lex->buffer == "(") {
-            stack.push(*lex);
-        } else if (lex->buffer == ")") {
-            while (stack.top().buffer != "(") {
+        if (lex.type == Lexeme::Type::number) {
+            str.push_back(lex);
+        } else if (lex.to_string() == "(") {
+            stack.push(lex);
+        } else if (lex.to_string() == ")") {
+            while (stack.top().to_string() != "(") {
                 str.push_back(stack.top());
                 stack.pop();
             }
             stack.pop();
         } else {
             if (stack.empty() || stack.top().type == Lexeme::Type::bracket) {
-                stack.push(*lex);
-            } else if (stack.top().priority < lex->priority) {
-                stack.push(*lex);
+                stack.push(lex);
+            } else if (stack.top().priority < lex.priority) {
+                stack.push(lex);
             } else {
-                while ( !stack.empty()  &&  (stack.top().type == Lexeme::Type::operator_ || stack.top().type == Lexeme::Type::function && stack.top().priority >= lex->priority)) {
+                while ( !stack.empty()  &&  (stack.top().type == Lexeme::Type::operator_ || stack.top().type == Lexeme::Type::function && stack.top().priority >= lex.priority)) {
                     str.push_back(stack.top());
                     stack.pop();
-                } stack.push(*lex);
+                } stack.push(lex);
             }
 
         }
@@ -149,96 +148,43 @@ std::list<Lexeme> ToPostfix(std::list<Lexeme> lexeme) {
  double Сalculator(std::list<Lexeme> str) {
     std::stack<Lexeme> stack;
     double res = 0;
-    for ( auto lex = str.begin(); lex != str.end(); lex++) {
-        if  (lex->type == Lexeme::Type::number) {
-            stack.push(*lex);
+    for ( auto lex : str) {
+        if  (lex.type == Lexeme::Type::number) {
+            stack.push(lex);
         } else {
             if (!stack.empty()) {
                 Lexeme cur_s_2 = stack.top();
                 stack.pop();
-                if (!stack.empty() && lex->type == Lexeme::Type::operator_) {
+                if (!stack.empty() && lex.type == Lexeme::Type::operator_) {
                     Lexeme cur_s_1 = stack.top();
                     stack.pop();
-                    switch (lex->buffer[0]) {
+                    switch (lex.to_string()[0]) {
                         case '+':
-                            res = atof(cur_s_1.buffer.c_str()) + atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (res));
+                            res = cur_s_1 + cur_s_2;
+                            stack.push(res);
                             break;
                         case '-':
-                            res = atof(cur_s_1.buffer.c_str()) - atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (res));
+                            res = cur_s_1 - cur_s_2;
+                            stack.push(res);
                             break;
                         case '*':
-                            res = atof(cur_s_1.buffer.c_str()) * atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (res));
+                            res = cur_s_1 * cur_s_2;
+                            stack.push(res);
                             break;
                         case '/':
-                            res = atof(cur_s_1.buffer.c_str()) / atof(cur_s_2.buffer.c_str());
-                            stack.push(Lexeme (res));
+                            res = cur_s_1 / cur_s_2;
+                            stack.push(res);
                             break;
                         }
                     }
-                    if (lex->type == Lexeme::Type::function) {
-                        stack.push(lex->f(atof(cur_s_2.buffer.c_str())));
+                    if (lex.type == Lexeme::Type::function) {
+                        stack.push( lex.f(cur_s_2));
                     }
                 }
             }
         }
     if (!stack.empty()) {
-        res = atof(stack.top().buffer.c_str());
+        res = stack.top();
     }
     return res;
 }
-
-// sin(x)
-// cos(x)
-// tan(x)
-// ctg(x)
-// sqrt(x)
-// ln(x)
-
-// void Count(List *postfix_str) {
-//     Lexem stack;
-//     Lexem x;
-//     stack_node *head = init_stack(stack);
-//     for (list_node* cur = head; cur != NULL; cur = cur->next){
-//         int i;
-//         for (i = 0; cur->data.buffer[i] != '\n'; i++){
-//             Lexem c = cur->data;
-//             if (cur->data.type == number){
-//                 add(postfix_str, c);
-//                 //printf("num ");
-//             } else {
-//                     switch (c.buffer[0])
-//                 {
-//                 case '+':
-//                     printf("tt");
-//                     break;
-
-//                 case '-':
-//                     printf("tt");
-//                     break;
-
-//                 case '*':
-//                     printf("tt");
-//                     break;
-
-//                  case '^':
-//                     printf("tt");
-//                     break;
-//                 case 'cosx':
-//                     printf("tt");
-//                     break;
-
-//                 case 'costyu':
-//                     printf("tt");
-//                     break;
-
-//                 default:
-//                     break;
-//                 }
-//             }
-
-//         }
-//     }
-// }

@@ -3,11 +3,12 @@
 #include <cmath>
 
 
-Lexeme::Lexeme(std::string_view word) {
+Lexeme::Lexeme(std::string& word) {
     buffer = word;
     if (is_number(word)) {
         type = Lexeme::Type::number;
         priority = 500;
+        buffer = atof(word.c_str());
     } else if (is_bracket(word[0])) {
         type = Lexeme::Type::bracket;
         priority = 0;
@@ -51,8 +52,9 @@ double Lexeme::f(double x1, double x2) {
 }
 
 Lexeme::Lexeme(double number) {
-    this->buffer = std::to_string(number);
+    this->buffer = number;
     type = Type::number;
+    priority = 500;
 }
 
 Lexeme::Lexeme() {
@@ -60,5 +62,9 @@ Lexeme::Lexeme() {
 }
 
 Lexeme::operator double() {
-    return atof(buffer.c_str());
+    return std::get<1>(buffer);
+}
+
+std::string Lexeme::to_string() {
+    return std::get<0>(buffer);;
 }
